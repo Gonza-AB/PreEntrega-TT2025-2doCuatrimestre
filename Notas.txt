@@ -1,0 +1,4 @@
+Cosas instaladas
+
+-bootstrap
+npm install bootstrap react-bootstrap
