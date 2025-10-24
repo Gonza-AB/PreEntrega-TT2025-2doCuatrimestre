@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 Cosas instaladas
 
 -bootstrap
 npm install bootstrap react-bootstrap
-=======
-Cosas instaladas
-
--bootstrap
-npm install bootstrap react-bootstrap
->>>>>>> 1656d356019e855c884dddb6a28158285155201f
