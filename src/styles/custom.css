@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 footer, header {
     scroll-behavior: smooth;
     background-color: rgb(0, 80, 0);
@@ -50,3 +51,57 @@ h2, h3, h4, h5 {
     border-radius: 10px;
     transition: all 1s ease-in-out;
 }
+=======
+footer, header {
+    scroll-behavior: smooth;
+    background-color: rgb(0, 80, 0);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #003300;
+    padding: 1.5rem;
+    margin: 1rem auto;
+    width: 90%;
+    border: 2px solid #003300;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 51, 0, 0.1);
+    gap: 2rem;
+}
+
+body {
+    font-family: 'Ancizar Serif', serif;
+}
+
+h1 {
+    font-family: 'Ancizar Serif', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    text-align: center;
+    color: #003300;
+    background-color: #f0f9f0;
+    padding: 0.75rem 1rem;
+    margin: 1.5rem auto;
+    border: 2px solid #cce0cc;
+    width: 90%;
+    box-shadow: 0 2px 6px rgba(0, 51, 0, 0.15);
+    border-radius: 12px;
+    transition: ease-in 1s;
+}
+
+h2, h3, h4, h5 {
+    font-family: 'Ancizar Serif', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: center;
+    color: #004d00;
+    background-color: #f0f9f0;
+    padding: 0.5rem 1rem;
+    margin: 1rem auto;
+    border: 2px solid #cce0cc;
+    width: 90%;
+    box-shadow: 0 1px 5px rgba(0, 51, 0, 0.1);
+    border-radius: 10px;
+    transition: all 1s ease-in-out;
+}
+>>>>>>> 1656d356019e855c884dddb6a28158285155201f
