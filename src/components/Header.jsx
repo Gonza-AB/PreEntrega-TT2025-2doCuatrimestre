@@ -32,3 +32,5 @@ return(
     </header>
     );
 }
+
+export default Header;

@@ -8,5 +8,3 @@ export default function Administracion(){
         </Container>
     )
 }
-
-import {Container} from 'react-bootstrap';

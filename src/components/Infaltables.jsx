@@ -10,3 +10,4 @@ const Infaltables = () => {
     )
 }
 
+export default Infaltables;
