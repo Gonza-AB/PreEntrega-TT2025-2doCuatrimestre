@@ -5,9 +5,7 @@ import App from './App.jsx'
 import './styles/custom.css'
 
 createRoot(document.getElementById('root')).render(
-  <body>
     <StrictMode>
       <App />
-    </StrictMode>,
-  </body>
+    </StrictMode>
 )
