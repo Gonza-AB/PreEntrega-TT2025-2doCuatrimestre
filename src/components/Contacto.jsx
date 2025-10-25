@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Container, Row, Col, Card} from 'react-bootstrap';
 
 const Contacto = () => {
-    const handleSumbit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         alert('Formulario Enviado');
     };
@@ -14,7 +14,7 @@ const Contacto = () => {
                     <Card className="shadow-lg p-4">
                         <Card.Body>
                             <h2 className="text-center mb-4">Formulario de Contacto</h2>
-                            <Form onSubmit={handleSumbit}>
+                            <Form onSubmit={handleSubmit}>
                                 <Form.Group className="mb-3" controlId="formUsername">
                                     <Form.Label>Nombre</Form.Label>
                                     <Form.Control type="text" placeholder="Ingrese su nombre" required/>
@@ -28,7 +28,7 @@ const Contacto = () => {
                                     <Form.Control type="text" placeholder="Ingrese su mensaje" required>
                                     </Form.Control>
                                 </Form.Group>
-                                <Button variant="primary" type="sumbit" className="w-100">Ingresar</Button>
+                                <Button variant="primary" type="submit" className="w-100">Ingresar</Button>
                             </Form>
                         </Card.Body>
                     </Card>

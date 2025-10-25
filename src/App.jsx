@@ -32,9 +32,10 @@ function App() {
 
       {/*Ruta protegida*/}
       <Route path='/admin' element={
-      <RutaProtegida> <Administracion/> </RutaProtegida>}>
-      </Route>
+      <RutaProtegida> <Administracion/> </RutaProtegida>}/>
+
       {/* Ruta no existente */}
+      <Route path='*' element={<NotFound/>} />  
 
     </Routes>
     <Footer/>
