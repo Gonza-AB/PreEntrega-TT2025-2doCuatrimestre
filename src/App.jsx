@@ -16,6 +16,9 @@ import Administracion from './components/Administracion';
 import RutaProtegida from './components/RutaProtegida';
 import Nosotros from './components/Nosotros';
 import Contacto from './components/Contacto';
+import Dashboard from './components/Dashboard';
+import PrivateRoute from './components/PrivateRoute';
+
 
 function App() {
   return (
@@ -34,8 +37,12 @@ function App() {
       <Route path='/admin' element={
       <RutaProtegida> <Administracion/> </RutaProtegida>}/>
 
-      {/* Ruta no existente */}
-      <Route path='*' element={<NotFound/>} />  
+      {/* LOGIN DISTINTO */}
+      <Route path='login' element={<Login/>} />
+      <Route path='/dashboard' element={<PrivateRoute><Dashboard/></PrivateRoute>}
+      />
+      <Route path='*' element={<Login/>} />
+      {}
 
     </Routes>
     <Footer/>

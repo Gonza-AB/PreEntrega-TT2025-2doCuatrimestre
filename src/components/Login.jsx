@@ -1,39 +1,52 @@
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, Container, Row, Col, Card} from 'react-bootstrap';
+import { useAuth } from './AuthContext';
 
-const Login = () => {
+const Login=()=>{
+    const {login}= useAuth();
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        localStorage.setItem('auth', 'true');
-        navigate('/admin', { replace: true });
-    };
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    return(
-        <Container className="d-flex justify-content-center align-items-center min-vh-100">
-            <Row className="w-100 justify-content-center">
-                <Col md={6} lg={4}>
-                    <Card className="shadow-lg p-4">
-                        <Card.Body>
-                            <h2 className="text-center mb-4">Iniciar Sesion</h2>
-                            <Form onSubmit={handleSubmit}>
-                                <Form.Group className="mb-3" controlId="formUsername">
-                                    <Form.Label>Usuario</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese su usuario" required/>
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="formPassword">
-                                    <Form.Label>Contraseña</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese su contraseñas" required/>
-                                </Form.Group>
-                                <Button variant="primary" type="submit" className="w-100">Ingresar</Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-    )
+const handleSubmit = e =>{
+    e.preventDefault();
+    const success = login (username,password);
+    if (success)
+    {
+        navigate('/dashboard')
+    }
+    else
+    {
+        setError('usuario incorrecto')
+    }
+};
+
+return (
+    <div className="container mt-5">
+        <h2>Iniciar Sesion</h2>
+        <form onSubmit={handleSubmit} className="mt-3">
+            <div className="mb-3">
+                <label className="form-label">Usuario</label>
+                <input 
+                type="text"
+                className="form-control" 
+                value={username} 
+                onChange={e => setUsername(e.target.value)}
+                />
+                <label className="form-label">Contraseña</label>
+                <input 
+                type="password"
+                className="form-control"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                />
+            </div>
+            <button type="submit" className="btn btn-primary">Ingresar</button>
+            {error && <div className="alert alert-danger mt-3">{error}</div>}
+        </form>
+    </div>
+);
 }
 
 export default Login;
