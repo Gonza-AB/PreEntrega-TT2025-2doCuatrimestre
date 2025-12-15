@@ -1,49 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { Row,Col } from 'react-bootstrap';
-import ProductCard from './ProductCard';
+import React, { useEffect, useState, useContext } from "react";
+import { Row, Col } from "react-bootstrap";
+import ProductCard from "./ProductCard";
+import { CartContext } from "./CartContext";
 
-const ProductCatalogue = ({ category = null }) =>{
+const ProductCatalogue = ({ category = null }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = 'https://fakestoreapi.com/products';
-        if (category) {
-            url = `https://fakestoreapi.com/products/category/${category}`;
+    const { agregarAlCarrito } = useContext(CartContext);
 
-        }
+    useEffect(() => {
+        let url = "https://fakestoreapi.com/products";
+        if (category) url = `https://fakestoreapi.com/products/category/${category}`;
+
         fetch(url)
         .then((response) => response.json())
-        .then((data) =>{
+        .then((data) => {
             setProducts(data);
             setLoading(false);
         })
         .catch((error) => {
-            console.error('Error fetching data: ', error)
+            console.error("Error fetching data: ", error);
             setLoading(false);
         });
-
     }, [category]);
 
-    const handleAgregarAlCarrito = (products) => {
-        alert(`Producto ${products.title} agregado al carrito`);
-    };
+    if (loading) return <div>Loading...</div>;
 
-    if (loading) {
-        return(
-            <div>Loading...</div>
-        )
-    }
-
-    return(
+    return (
         <Row>
-            {products.map((products) => (
-                <Col md={4} key={products.id} className="mb-4">
-                    <ProductCard products={products} agregarAlCarrito={handleAgregarAlCarrito}/>
-                </Col>
-            ))}
+        {products.map((p) => (
+            <Col md={4} key={p.id} className="mb-4">
+            <ProductCard products={p} agregarAlCarrito={agregarAlCarrito} />
+            </Col>
+        ))}
         </Row>
     );
-}
+};
 
 export default ProductCatalogue;

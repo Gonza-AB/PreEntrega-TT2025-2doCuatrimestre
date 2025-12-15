@@ -4,7 +4,7 @@ import ProductList from './ProductList';
 const Infaltables = () => {
     return(
         <div className="container">
-            <h1>Infaltables - Joyeria</h1>
+            <h1>Infaltables - Clasicos</h1>
             <ProductList category="" /> 
         </div>
     )

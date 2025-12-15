@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from 'react-bootstrap';
 
-const API_URL="url";
+const API_URL="https://69409195993d68afba6c736a.mockapi.io/Productos";
 
 const CrudProductos = () => {
     const [productos, setProductos] = useState([]);
@@ -64,7 +64,7 @@ fetch(url, {
 })
 .then((res) => {
     if (!res.ok) throw new Error("Error al guardar el producto");
-    return res,json();
+    return res.json();
     })
 .then(() => {
     handleClose();
@@ -76,7 +76,7 @@ fetch(url, {
 const eliminarProducto = (id) => {
     if (!window.confirm("Seguro que quiere eliminar este producto?")) return;
 
-    fetch(`${API_URL}/${id}`, { method: "Delete" })
+    fetch(`${API_URL}/${id}`, { method: "DELETE" })
     .then((res) => {
         if(!res.ok) throw new Error("Error al eliminar el producto");
         getProductos();

@@ -14,6 +14,8 @@ import Administracion from "./components/Administracion";
 import Dashboard from "./components/Dashboard";
 import Carrito from "./components/Carrito";
 import PrivateRoute from "./components/PrivateRoute";
+import CrudProductos from './components/CrudProductos';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/login" element={<Login />} />
 
+        {/* RUTAS PROTEGIDAS */}
         <Route
           path="/admin"
           element={
@@ -56,6 +59,15 @@ function App() {
         />
 
         <Route path="*" element={<NotFound />} />
+
+        <Route
+          path="/crud"
+          element={
+            <PrivateRoute>
+              <CrudProductos />
+            </PrivateRoute>
+          }     
+        />
       </Routes>
 
       <Footer />
