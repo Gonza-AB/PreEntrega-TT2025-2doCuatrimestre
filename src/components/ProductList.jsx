@@ -1,49 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { Row,Col } from 'react-bootstrap';
-import ProductCard from './ProductCard';
+import { Table, Button } from 'react-bootstrap';
 
-const ProductList = ({ category = null }) =>{
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        let url = 'https://fakestoreapi.com/products';
-        if (category) {
-            url = `https://fakestoreapi.com/products/category/${category}`;
-
-        }
-        fetch(url)
-        .then((response) => response.json())
-        .then((data) =>{
-            setProducts(data);
-            setLoading(false);
-        })
-        .catch((error) => {
-            console.error('Error fetching data: ', error)
-            setLoading(false);
-        });
-
-    }, [category]);
-
-    const handleAgregarAlCarrito = (products) => {
-        alert(`Producto ${products.title} agregado al carrito`);
-    };
-
-    if (loading) {
-        return(
-            <div>Loading...</div>
-        )
+function ProductList({ productos = [], onEdit, OnDelete }) {
+    if (!productos || productos.length === 0) {
+        return <p>No hay productos cargados.</p>
     }
 
-    return(
-        <Row>
-            {products.map((products) => (
-                <Col md={4} key={products.id} className="mb-4">
-                    <ProductCard products={products} agregarAlCarrito={handleAgregarAlCarrito}/>
-                </Col>
-            ))}
-        </Row>
-    );
+    return (
+        <Table striped bordered hover>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th style={{width: '150px'}}>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {productos.map(({ id,nombre,precio}) => (
+                    <tr key={id}>
+                        <td>{id}</td>
+                        <td>{nombre}</td>
+                        <td>${precio.toFixed(2)}</td>
+                        <td>
+                            <Button
+                            variant='warning'
+                            size='sm'
+                            className='me-2'
+                            onClick={() => onEdit({ id,nombre,precio})}
+                            >
+                                Editar
+                            </Button>
+                            <Button
+                            variant='danger'
+                            size='sm'
+                            onClick={() => OnDelete(id)}
+                            >
+                                Borrar
+                            </Button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </Table>
+    )
 }
 
 export default ProductList;

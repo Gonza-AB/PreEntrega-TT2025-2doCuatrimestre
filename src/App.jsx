@@ -1,53 +1,66 @@
-import { useState, useEffect } from 'react'
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-
-import Footer from './components/Footer';
-import Header from './components/Header';
-import Home from './components/Home';
-import Infaltables from './components/Infaltables';
-import Login from './components/Login';
-import ProductCard from './components/ProductCard';
-import ProductList from './components/ProductList';
-import NotFound from './components/NotFound';
-import Productos from './components/Productos';
-import Administracion from './components/Administracion';
-import RutaProtegida from './components/RutaProtegida';
-import Nosotros from './components/Nosotros';
-import Contacto from './components/Contacto';
-import Dashboard from './components/Dashboard';
-import PrivateRoute from './components/PrivateRoute';
-
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./components/Home";
+import Productos from "./components/Productos";
+import Infaltables from "./components/Infaltables";
+import Nosotros from "./components/Nosotros";
+import Contacto from "./components/Contacto";
+import Login from "./components/Login";
+import NotFound from "./components/NotFound";
+import Administracion from "./components/Administracion";
+import Dashboard from "./components/Dashboard";
+import Carrito from "./components/Carrito";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
-  <Router>
-    <Header />
-    <Routes>
-      <Route path="/" element={<Home/>} />
-      <Route path="/productos" element={<Productos/>} />
-      <Route path="/infaltables" element={<Infaltables/>} />
-      <Route path="/nosotros" element={<Nosotros/>} />
-      <Route path='/administracion' element={<Login/>} />
-      <Route path="/contacto" element={<Contacto />} />
+    <Router>
+      <Header />
 
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/productos" element={<Productos />} />
+        <Route path="/infaltables" element={<Infaltables />} />
+        <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/login" element={<Login />} />
 
-      {/*Ruta protegida*/}
-      <Route path='/admin' element={
-      <RutaProtegida> <Administracion/> </RutaProtegida>}/>
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <Administracion />
+            </PrivateRoute>
+          }
+        />
 
-      {/* LOGIN DISTINTO */}
-      <Route path='login' element={<Login/>} />
-      <Route path='/dashboard' element={<PrivateRoute><Dashboard/></PrivateRoute>}
-      />
-      <Route path='*' element={<Login/>} />
-      {}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
 
-    </Routes>
-    <Footer/>
-  </Router>
-  )
+        <Route
+          path="/carrito"
+          element={
+            <PrivateRoute>
+              <Carrito />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      <Footer />
+    </Router>
+  );
 }
 
-export default App
+export default App;
