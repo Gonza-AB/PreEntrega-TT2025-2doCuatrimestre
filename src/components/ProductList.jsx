@@ -1,49 +1,41 @@
-import { Table, Button } from 'react-bootstrap';
+import React, { useEffect, useState, useContext } from "react";
+import { Row, Col } from "react-bootstrap";
+import ProductCard from "./ProductCard";
+import { CartContext } from "./CartContext";
 
-function ProductList({ productos = [], onEdit, OnDelete }) {
-    if (!productos || productos.length === 0) {
-        return <p>No hay productos cargados.</p>
-    }
+const ProductList = ({ category = null }) => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const { agregarAlCarrito } = useContext(CartContext);
+
+    useEffect(() => {
+        let url = "https://fakestoreapi.com/products";
+        if (category) url = `https://fakestoreapi.com/products/category/${category}`;
+
+        fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+            setProducts(data);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.error("Error fetching data: ", error);
+            setLoading(false);
+        });
+    }, [category]);
+
+    if (loading) return <div>Loading...</div>;
 
     return (
-        <Table striped bordered hover>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th style={{width: '150px'}}>Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {productos.map(({ id,nombre,precio}) => (
-                    <tr key={id}>
-                        <td>{id}</td>
-                        <td>{nombre}</td>
-                        <td>${precio.toFixed(2)}</td>
-                        <td>
-                            <Button
-                            variant='warning'
-                            size='sm'
-                            className='me-2'
-                            onClick={() => onEdit({ id,nombre,precio})}
-                            >
-                                Editar
-                            </Button>
-                            <Button
-                            variant='danger'
-                            size='sm'
-                            onClick={() => OnDelete(id)}
-                            >
-                                Borrar
-                            </Button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </Table>
-    )
-}
+        <Row>
+        {products.map((p) => (
+            <Col md={4} key={p.id} className="mb-4">
+            <ProductCard products={p} agregarAlCarrito={agregarAlCarrito} />
+            </Col>
+        ))}
+        </Row>
+    );
+};
 
 export default ProductList;
