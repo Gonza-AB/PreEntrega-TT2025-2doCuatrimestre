@@ -1,10 +1,13 @@
-import {Container} from 'react-bootstrap';
+import { Container } from "react-bootstrap";
+import CrudProductos from "./CrudProductos";
 
-export default function Administracion(){
-    return(
+export default function Administracion() {
+    return (
         <Container className="mt-4">
-            <h2>Panel de Administracion</h2>
-            <p>Acceso excluviso para usuarios autenticados.</p>
+        <h2>Panel de Administración</h2>
+        <p>Acceso exclusivo para usuarios autenticados.</p>
+
+        <CrudProductos />
         </Container>
-    )
+    );
 }

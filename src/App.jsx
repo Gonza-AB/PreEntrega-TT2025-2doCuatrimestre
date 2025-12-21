@@ -15,13 +15,19 @@ import Dashboard from "./components/Dashboard";
 import Carrito from "./components/Carrito";
 import PrivateRoute from "./components/PrivateRoute";
 import CrudProductos from './components/CrudProductos';
+import Checkout from './components/Checkout';
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 
 function App() {
   return (
     <Router>
       <Header />
-
+      <ToastContainer position="top-right" autoClose={3000} />
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos />} />
@@ -29,6 +35,8 @@ function App() {
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/carrito" element={<Carrito />} />
+
 
         {/* RUTAS PROTEGIDAS */}
         <Route
@@ -50,10 +58,10 @@ function App() {
         />
 
         <Route
-          path="/carrito"
+          path="/checkout"
           element={
             <PrivateRoute>
-              <Carrito />
+              <Checkout />
             </PrivateRoute>
           }
         />

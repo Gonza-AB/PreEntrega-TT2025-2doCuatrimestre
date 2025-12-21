@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal, Alert, Spinner } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const API_URL = "https://69409195993d68afba6c736a.mockapi.io/Productos";
 
@@ -8,8 +9,11 @@ const CrudProductos = () => {
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
-    const [show, setShow] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [editId, setEditId] = useState(null);
+
+    const [showDelete, setShowDelete] = useState(false);
+    const [productoAEliminar, setProductoAEliminar] = useState(null);
 
     const [form, setForm] = useState({
         title: "",
@@ -18,6 +22,11 @@ const CrudProductos = () => {
         stock: "",
         image: "",
     });
+
+    const resetForm = () => {
+        setForm({ title: "", description: "", price: "", stock: "", image: "" });
+        setEditId(null);
+    };
 
     const getProductos = async () => {
         try {
@@ -29,6 +38,7 @@ const CrudProductos = () => {
         setProductos(data);
         } catch (e) {
         setErrorMsg(e.message || "Error desconocido");
+        toast.error("Error al cargar productos");
         } finally {
         setLoading(false);
         }
@@ -38,36 +48,58 @@ const CrudProductos = () => {
         getProductos();
     }, []);
 
-    const handleClose = () => {
-        setShow(false);
-        setForm({ title: "", description: "", price: "", stock: "", image: "" });
-        setEditId(null);
+    const openCreate = () => {
+        resetForm();
+        setShowForm(true);
     };
 
-    const handleShow = (producto) => {
-        setShow(true);
-        if (producto) {
+    const openEdit = (producto) => {
         setForm({
-            title: producto.title ?? "",
-            description: producto.description ?? "",
-            price: producto.price ?? "",
-            stock: producto.stock ?? "",
-            image: producto.image ?? "",
+        title: producto.title ?? "",
+        description: producto.description ?? "",
+        price: producto.price ?? "",
+        stock: producto.stock ?? "",
+        image: producto.image ?? "",
         });
         setEditId(producto.id);
-        }
+        setShowForm(true);
+    };
+
+    const closeForm = () => {
+        setShowForm(false);
+        resetForm();
+    };
+
+    const openDelete = (producto) => {
+        setProductoAEliminar(producto);
+        setShowDelete(true);
+    };
+
+    const closeDelete = () => {
+        setProductoAEliminar(null);
+        setShowDelete(false);
+    };
+
+    const validar = () => {
+        if (!form.title.trim()) return "El nombre/título es obligatorio";
+        if (Number(form.price) <= 0) return "El precio debe ser mayor a 0";
+        if ((form.description ?? "").trim().length < 10)
+        return "La descripción debe tener al menos 10 caracteres";
+        return "";
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMsg("");
 
-        if (!form.title.trim()) return setErrorMsg("El título es obligatorio");
-        if (Number(form.price) <= 0) return setErrorMsg("El precio debe ser mayor a 0");
-        if ((form.description ?? "").trim().length < 10)
-        return setErrorMsg("La descripción debe tener al menos 10 caracteres");
+        const err = validar();
+        if (err) {
+        setErrorMsg(err);
+        toast.error(err);
+        return;
+        }
 
-        const productData = {
+        const payload = {
         ...form,
         price: Number(form.price),
         stock: Number(form.stock),
@@ -80,27 +112,37 @@ const CrudProductos = () => {
         const res = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(productData),
+            body: JSON.stringify(payload),
         });
 
         if (!res.ok) throw new Error("Error al guardar el producto");
-        await res.json(); 
+        await res.json();
 
-        handleClose();
+        toast.success(editId ? "Producto actualizado ✅" : "Producto agregado ✅");
+        closeForm();
         getProductos();
         } catch (e) {
         setErrorMsg(e.message || "Error desconocido");
+        toast.error(e.message || "Error al guardar");
         }
     };
 
-    const eliminarProducto = async (id) => {
-        if (!window.confirm("Seguro que quiere eliminar este producto?")) return;
+    const confirmarEliminar = async () => {
+        if (!productoAEliminar) return;
+
         try {
-        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" }); // ✅ antes estaba mal
+        const res = await fetch(`${API_URL}/${productoAEliminar.id}`, {
+            method: "DELETE",
+        });
+
         if (!res.ok) throw new Error("Error al eliminar el producto");
+
+        toast.success("Producto eliminado ✅");
+        closeDelete();
         getProductos();
         } catch (e) {
         setErrorMsg(e.message || "Error desconocido");
+        toast.error(e.message || "Error al eliminar");
         }
     };
 
@@ -110,7 +152,7 @@ const CrudProductos = () => {
 
         {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
 
-        <Button className="mb-3" onClick={() => handleShow()}>
+        <Button className="mb-3" onClick={openCreate}>
             Agregar Producto
         </Button>
 
@@ -128,7 +170,7 @@ const CrudProductos = () => {
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Imagen</th>
-                <th style={{ width: 180 }}>Acciones</th>
+                <th style={{ width: 190 }}>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -139,7 +181,7 @@ const CrudProductos = () => {
                     <td>${Number(prod.price).toFixed(2)}</td>
                     <td>{prod.stock}</td>
                     <td>
-                    {prod.image?.startsWith("http") ? (
+                    {String(prod.image || "").startsWith("http") ? (
                         <img
                         src={prod.image}
                         alt={prod.title}
@@ -152,10 +194,10 @@ const CrudProductos = () => {
                     )}
                     </td>
                     <td className="d-flex gap-2">
-                    <Button size="sm" variant="warning" onClick={() => handleShow(prod)}>
+                    <Button size="sm" variant="warning" onClick={() => openEdit(prod)}>
                         Editar
                     </Button>
-                    <Button size="sm" variant="danger" onClick={() => eliminarProducto(prod.id)}>
+                    <Button size="sm" variant="danger" onClick={() => openDelete(prod)}>
                         Eliminar
                     </Button>
                     </td>
@@ -165,13 +207,14 @@ const CrudProductos = () => {
             </Table>
         )}
 
-        <Modal show={show} onHide={handleClose}>
+        {/* Modal Agregar/Editar */}
+        <Modal show={showForm} onHide={closeForm}>
             <Modal.Header closeButton>
             <Modal.Title>{editId ? "Editar" : "Agregar"} Producto</Modal.Title>
             </Modal.Header>
             <Modal.Body>
             <Form onSubmit={handleSubmit}>
-                <Form.Label>Titulo</Form.Label>
+                <Form.Label>Nombre / Título</Form.Label>
                 <Form.Control
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -179,7 +222,7 @@ const CrudProductos = () => {
                 />
 
                 <Form.Group className="mb-2 mt-2">
-                <Form.Label>Descripcion</Form.Label>
+                <Form.Label>Descripción</Form.Label>
                 <Form.Control
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -221,6 +264,25 @@ const CrudProductos = () => {
                 </Button>
             </Form>
             </Modal.Body>
+        </Modal>
+
+        {/* Modal Confirmación Eliminar */}
+        <Modal show={showDelete} onHide={closeDelete}>
+            <Modal.Header closeButton>
+            <Modal.Title>Confirmar eliminación</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+            ¿Seguro que querés eliminar{" "}
+            <strong>{productoAEliminar?.title}</strong>?
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={closeDelete}>
+                Cancelar
+            </Button>
+            <Button variant="danger" onClick={confirmarEliminar}>
+                Eliminar
+            </Button>
+            </Modal.Footer>
         </Modal>
         </div>
     );
