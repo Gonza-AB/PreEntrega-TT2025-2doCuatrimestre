@@ -26,9 +26,10 @@ const Header = () => {
             <Container>
             <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
                 <img
-                src="https://placehold.co/40"
-                alt="Logo"
-                className="d-inline-block align-top me-2"
+                style={{ width: 40, height: 40 }}
+                rel="icon" 
+                type="image/png" 
+                href="./Camisetas_gonza.png"
                 />
                 <span>Camisetas Gonza </span>
             </Navbar.Brand>
